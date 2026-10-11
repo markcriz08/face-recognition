@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attendance Kiosk - Face Recognition</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="css/kiosk.css">
+</head>
+<body class="kiosk-body">
+    <div class="container py-4">
+        <!-- Kiosk Header -->
+        <div class="kiosk-header d-flex justify-content-between align-items-center mb-4 text-white px-3 py-2 rounded shadow-sm bg-glass">
+            <h2 class="mb-0 fs-4 fw-bold d-flex align-items-center gap-2">
+                <i class="bi bi-cpu text-info"></i> Attendance Kiosk
+            </h2>
+            <h4 id="ph-clock" class="text-warning mb-0 fs-5 fw-semibold font-monospace">
+                <i class="bi bi-clock-history me-1"></i> Loading...
+            </h4>
+            <div class="btn-group shadow-sm" role="group">
+                <button id="btn-mode-face" class="btn btn-light active px-3" onclick="switchMode('face')">
+                    <i class="bi bi-person-bounding-box me-1"></i> Face Recognition
+                </button>
+                <button id="btn-mode-manual" class="btn btn-outline-light px-3" onclick="switchMode('manual')">
+                    <i class="bi bi-keyboard me-1"></i> Manual Entry
+                </button>
+            </div>
+        </div>
+
+        <!-- Section 1: Face Recognition Mode with Futuristic Camera HUD Effect -->
+        <div id="section-face" class="card shadow-lg bg-dark text-white p-4 text-center border-0 rounded-4">
+            <div class="camera-wrapper position-relative d-inline-block mx-auto mb-3 shadow-lg">
+                <video id="webcam" autoplay muted playsinline width="640" height="480" class="rounded-3 border border-secondary"></video>
+                <!-- Futuristic HUD Overlay Effects -->
+                <div class="scanner-hud">
+                    <div class="scan-laser"></div>
+                    <div class="hud-corner top-left"></div>
+                    <div class="hud-corner top-right"></div>
+                    <div class="hud-corner bottom-left"></div>
+                    <div class="hud-corner bottom-right"></div>
+                    <div class="hud-target-box"></div>
+                </div>
+            </div>
+            <h4 id="scan-status" class="text-info fw-semibold mt-2 animate-pulse">
+                <i class="bi bi-eye-fill me-1"></i> Initializing system...
+            </h4>
+        </div>
+
+        <!-- Section 2: Manual Entry Mode -->
+        <div id="section-manual" class="card shadow-lg bg-dark text-white p-5 d-none mx-auto border-0 rounded-4" style="max-width: 500px;">
+            <div class="text-center mb-4">
+                <div class="display-6 text-success mb-2"><i class="bi bi-person-check-fill"></i></div>
+                <h3 class="mb-1 fw-bold">Manual Attendance Entry</h3>
+                <p class="text-muted small">Enter your assigned Delta Code below</p>
+            </div>
+            <div class="mb-4">
+                <label for="manual-delta" class="form-label text-muted small fw-bold">DELTA CODE</label>
+                <div class="input-group input-group-lg shadow-sm">
+                    <span class="input-group-text bg-secondary text-white border-0"><i class="bi bi-upc-scan"></i></span>
+                    <input type="text" id="manual-delta" class="form-control text-center font-monospace bg-dark text-white border-secondary" placeholder="e.g. DELTA-001">
+                </div>
+            </div>
+            <button class="btn btn-success btn-lg w-100 shadow-sm py-3 fw-bold" onclick="submitManualEntry()">
+                <i class="bi bi-send-fill me-2"></i> Submit Attendance
+            </button>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@vladmandic/face-api/dist/face-api.min.js"></script>
+    <script src="js/kiosk.js"></script>
+</body>
+</html>

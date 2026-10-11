@@ -1,0 +1,60 @@
+body.admin-body {
+    background-color: #f8f9fa;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+}
+
+.sidebar {
+    height: 100vh;
+    background: linear-gradient(180deg, #212529 0%, #1a1e21 100%);
+    color: #fff;
+    position: fixed;
+    width: 260px;
+    padding-top: 10px;
+    border-right: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.sidebar .nav-link {
+    transition: all 0.2s ease;
+    font-weight: 500;
+}
+
+.sidebar .nav-link:hover {
+    background-color: rgba(255, 255, 255, 0.08);
+    color: #fff !important;
+}
+
+.sidebar .nav-link.active {
+    background: linear-gradient(135deg, #0d6efd 0%, #0b5ed7 100%);
+    box-shadow: 0 4px 12px rgba(13, 110, 253, 0.3);
+}
+
+.main-content {
+    margin-left: 260px;
+    padding: 40px;
+}
+
+.table-container {
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+    transition: box-shadow 0.3s ease;
+}
+
+.icon-circle {
+    width: 54px;
+    height: 54px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+    animation: fadeIn 0.4s ease-out forwards;
+}
