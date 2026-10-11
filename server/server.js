@@ -31,12 +31,21 @@ const scanCache = {};
 // Helper: Precise Philippine Time (UTC+8)
 function getPhilippineDateTime() {
   const now = new Date();
-  const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
-  const phTime = new Date(utc + (3600000 * 8));
+  
+  // Format directly to Asia/Manila (Philippine Time)
+  const optionsDate = { timeZone: 'Asia/Manila', year: 'numeric', month: '2-digit', day: '2-digit' };
+  const optionsTime = { timeZone: 'Asia/Manila', hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' };
+  const optionsReadable = { timeZone: 'Asia/Manila', year: 'numeric', month: '2-digit', day: '2-digit', hour: 'numeric', minute: '2-digit', second: '2-digit', hour12: true };
+
+  // Generate ISO date format YYYY-MM-DD
+  const dateParts = new Intl.DateTimeFormat('en-CA', optionsDate).format(now); 
+  const timeStr = new Intl.DateTimeFormat('en-GB', optionsTime).format(now);
+  const readableStr = new Intl.DateTimeFormat('en-US', optionsReadable).format(now);
+
   return {
-    date: phTime.toISOString().split('T')[0],
-    time: phTime.toTimeString().split(' ')[0],
-    formattedReadable: phTime.toLocaleString('en-US', { timeZone: 'Asia/Manila' })
+    date: dateParts,
+    time: timeStr,
+    formattedReadable: readableStr
   };
 }
 
