@@ -4,6 +4,7 @@ const cors = require('cors');
 const bcrypt = require('bcryptjs');
 const axios = require('axios');
 const fs = require('fs');
+const nodemailer = require('nodemailer');
 
 // Explicitly load .env from root directory
 require('dotenv').config({ path: path.join(__dirname, '../.env') });
@@ -24,6 +25,15 @@ app.use(express.json({ limit: '15mb' }));
 
 // Serve static frontend assets from public directory at root level
 app.use(express.static(path.join(__dirname, '../public')));
+
+// Configure Nodemailer transporter for Gmail
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS
+  }
+});
 
 // In-memory cache for anti-double-scan interval
 const scanCache = {};
@@ -62,6 +72,9 @@ app.post('/api/admin/register', async (req, res) => {
     const salt = await bcrypt.genSalt(10);
     const password_hash = await bcrypt.hash(password, salt);
 
+    // Generate 6-digit verification PIN
+    const pin = Math.floor(100000 + Math.random() * 900000).toString();
+
     const query = `
       INSERT INTO admin_users (name, age, contact, address, email, password_hash)
       VALUES ($1, $2, $3, $4, $5, $6) RETURNING id, email;
@@ -69,9 +82,22 @@ app.post('/api/admin/register', async (req, res) => {
     const values = [name, age, contact, address, email, password_hash];
     const newAdmin = await pool.query(query, values);
 
+    // Send the 6-digit PIN via Email using Nodemailer
+    try {
+      await transporter.sendMail({
+        from: process.env.EMAIL_USER,
+        to: email,
+        subject: 'MDRRMO Admin Verification PIN',
+        text: `Hello ${name},\n\nYour 6-digit admin registration verification PIN is: ${pin}\n\nPlease use this PIN to complete your account activation.\n\n- MDRRMO Famy Time Management System`
+      });
+      console.log(`Verification PIN ${pin} successfully emailed to ${email}`);
+    } catch (emailErr) {
+      console.error('Email Sending Error:', emailErr.message);
+    }
+
     res.json({ 
       success: true, 
-      message: 'Admin registered successfully!',
+      message: 'Admin registered successfully! Please check your email for the 6-digit verification PIN.',
       adminId: newAdmin.rows[0].id 
     });
   } catch (err) {
